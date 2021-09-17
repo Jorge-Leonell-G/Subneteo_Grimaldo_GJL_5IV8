@@ -22,9 +22,14 @@ public class binaryIP {
     private String numhost;
     
     public binaryIP(IP ip){
+        int mask = ip.getMask();
         address = CalculadoraIP.decimalIPtoBinary(ip.getAddress());
         submask = CalculadoraIP.binMask(ip.getMask());
         wildcard = CalculadoraIP.wildcard(submask);
+        network = CalculadoraIP.binaryNetwork(address, ip.getMask());
+        minhost = CalculadoraIP.binaryHostMin(network);
+        maxhost = CalculadoraIP.binaryHostMax(network, ip.getMask());
+        broadcast = CalculadoraIP.binaryHostMin(maxhost);
     }
     
     //getters & setters

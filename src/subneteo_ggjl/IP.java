@@ -29,8 +29,18 @@ public class IP {
         //Instancia de la clase binaryIP
         binaryIP = new binaryIP(this);
         
-        submask = CalculadoraIP.binaryIPToDecimal(binaryIP.getSubmask());
-        wildcard = CalculadoraIP.binaryIPToDecimal(binaryIP.getNetwork());
+        submask = b2d(binaryIP.getSubmask());
+        wildcard = b2d(binaryIP.getNetwork());
+        network = b2d(binaryIP.getNetwork());
+        minhost = b2d(binaryIP.getMinhost());
+        maxhost = b2d(binaryIP.getMaxhost());
+        broadcast = b2d(binaryIP.getBroadcast());
+    }
+    
+    private int calcNumHost(){
+        int restBytes = 32 - mask % 8;
+        
+        return 0;
     }
     
     private String b2d(String binaryIP){
@@ -120,6 +130,9 @@ public class IP {
     }
     
             
-    
+    @Override
+    public String toString(){
+        return "Address:    " + address + "      " + binaryIP.getAddress();
+    }
     
 }

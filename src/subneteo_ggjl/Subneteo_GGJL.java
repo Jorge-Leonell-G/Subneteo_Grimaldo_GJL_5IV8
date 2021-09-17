@@ -5,6 +5,8 @@
  */
 package subneteo_ggjl;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author leone
@@ -20,7 +22,10 @@ public class Subneteo_GGJL {
             "192.168.1.1/24", "124.0.0.0/16"
         };
         //instancia de la funcion principal de la calculadora
-        CalculadoraIP.calc(s);
+        IP[] ips = CalculadoraIP.calc(s);
+        for (IP ip: ips){
+            System.out.println(ip);
+        }
         
     }
     

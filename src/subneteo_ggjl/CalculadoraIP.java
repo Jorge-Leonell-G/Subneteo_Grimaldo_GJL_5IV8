@@ -16,23 +16,16 @@ import java.util.List;
  */
 public class CalculadoraIP {
     //metodo para realizar la iteracion for:each de las IP
-    public static void calc(String[] ips){ //ips: {124.0.0.45/24}
-        String [] binaryIps;
-        for(int i = 0; i < ips.length; i++){
-            String ip = ips[i];
-            binaryIps = segmentIP(getIP(ip));
-            System.out.println(Arrays.toString(binaryIps));
-            
-            //segundo ciclo for
-            for (int j = 0; j < binaryIps.length; j++){
-                binaryIps[j] = decimalBin(Integer.parseInt(binaryIps[j]));
-            }
-            int mask = getMask(ip);
-            String maskIP = binMask(mask);
-            String wildcardMask = wildcard(maskIP);
-            String decimalMask = binaryIPToDecimal(wildcardMask);
+    public static IP[] calc(String[] ips){ //ips: {124.0.0.45/24}
+        List<IP> ipList = new ArrayList<>();
+        String[] binaryIps;
+        for(String ipStr: ips){
+            String ip = getIP(ipStr);
+            int mask = getMask(ipStr);
+            ipList.add(new IP(ip, mask));
         }
         
+        return ipList.toArray(new IP[0]);
     }
     
     /*------------- Máscaras de red -----------------*/
@@ -54,14 +47,14 @@ public class CalculadoraIP {
             
         }
         
-        for (int i = 0; i < 32 - mask; i++){
-            s.append(1);
-            if (i % 8 == 7 && i != 32 - mask - 1){
+        for (int i = mask + 1; i < 32; i++){
+            s.append(0);
+            if (i % 8 == 0){
                 s.append('.');
             }
             
         }
-        
+        s.append(0);
         return s.toString();
     }
     
@@ -101,6 +94,21 @@ public class CalculadoraIP {
             ip = ip.substring(index + 1);  
         }
         return segments.toArray(new String[0]);
+    }
+    
+    public static int getByte(String ip, int index){
+        String[] bytes = segmentIP(ip);
+        
+        return Integer.parseInt(bytes[index]);
+    }
+    
+    public static int numHosts(IP ip){
+        
+        int mask = ip.getMask();
+        String minhost = ip.getMinhost();
+        String maxhost = ip.getMaxhost();
+        
+        return mask; //¿?
     }
     
     //metodo para el retornado de la IP, con un String ip como argumento
@@ -166,10 +174,50 @@ public class CalculadoraIP {
     /* --------- Network (red) ----------------- */
     
     public static String binaryNetwork(String binaryIP, int mask){
-        for (int i = mask; i < binaryIP.length(); i++){
-            
+        //atributos propios de una red
+        int bytePosition = mask / 8;
+        if (bytePosition >= 4) bytePosition = 3;
+        String[] segments = segmentIP(binaryIP);
+        
+        for (int i = bytePosition; i < segments.length; i++){
+            int pos = i == bytePosition ? (bytePosition + 1) * 8 - mask : 0;
+            StringBuilder s = new StringBuilder(segments[i]);
+            for (int j = Math.abs(pos - 8); j < segments[i].length(); j++){
+                
+                s.setCharAt(j, '0');
+            }
+            segments[i] = s.toString();
         }
-        return null;
+        
+        StringBuilder res = new StringBuilder();
+        for (String s : segments){
+            res.append(s);
+            res.append('.');
+        }
+        String s = res.toString();
+        s = s.substring(0, s.length() - 1);
+        
+        return s;
+    }
+    
+    public static String binaryHostMin(String network){
+        network = network.substring(network.length() - 1);
+        network += "1";
+        
+        return network;
+    }
+    
+    public static String binaryHostMax(String network, int mask){
+        network = network.substring(0, mask);
+        for (int i = 0; i < 32 - mask - 1; i++){
+            network += "1";
+        }
+        network += "0";
+        return network;
+    }
+    
+    public static String broadcast (String maxhost){
+        return binaryHostMin(maxhost);
     }
     
     public static int intPow(int b, int c){
