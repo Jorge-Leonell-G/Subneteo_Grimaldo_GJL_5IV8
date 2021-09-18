@@ -102,6 +102,7 @@ public class CalculadoraIP {
         return Integer.parseInt(bytes[index]);
     }
     
+    /*
     public static int numHosts(IP ip){
         
         int mask = ip.getMask();
@@ -110,7 +111,7 @@ public class CalculadoraIP {
         
         return mask; //¿?
     }
-    
+    */
     //metodo para el retornado de la IP, con un String ip como argumento
     public static String getIP(String ip){
         int index = ip.indexOf('/');
@@ -180,7 +181,7 @@ public class CalculadoraIP {
         String[] segments = segmentIP(binaryIP);
         
         for (int i = bytePosition; i < segments.length; i++){
-            int pos = i == bytePosition ? (bytePosition + 1) * 8 - mask : 0;
+            int pos = i == bytePosition ? (bytePosition + 1) * 8 - mask : 8;
             StringBuilder s = new StringBuilder(segments[i]);
             for (int j = Math.abs(pos - 8); j < segments[i].length(); j++){
                 
@@ -209,8 +210,10 @@ public class CalculadoraIP {
     
     public static String binaryHostMax(String network, int mask){
         network = network.substring(0, mask);
-        for (int i = 0; i < 32 - mask - 1; i++){
+        for (int i = mask + 1; i < 32; i++){
             network += "1";
+            if (i % 8 == 0)
+                network += ".";
         }
         network += "0";
         return network;

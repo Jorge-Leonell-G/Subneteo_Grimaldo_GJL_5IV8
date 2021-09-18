@@ -24,7 +24,7 @@ public class binaryIP {
     public binaryIP(IP ip){
         int mask = ip.getMask();
         address = CalculadoraIP.decimalIPtoBinary(ip.getAddress());
-        submask = CalculadoraIP.binMask(ip.getMask());
+        submask = CalculadoraIP.binMask(mask);
         wildcard = CalculadoraIP.wildcard(submask);
         network = CalculadoraIP.binaryNetwork(address, ip.getMask());
         minhost = CalculadoraIP.binaryHostMin(network);

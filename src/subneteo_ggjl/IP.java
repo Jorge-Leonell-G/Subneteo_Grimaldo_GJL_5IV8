@@ -19,8 +19,21 @@ public class IP {
     private String minhost;
     private String maxhost;
     private String broadcast;
-    private String numhost;
+    private int numhost;
     private binaryIP binaryIP;
+    
+    @Override
+    public String toString(){
+        return format("Address: ", address, binaryIP.getAddress()) + 
+               "Submask: \u001B{34m" + submask + " = " + mask + "\t\u001B[33m" + binaryIP.getMask() + 
+               format("Wildcard: ", wildcard, binaryIP.getWildcard()) + 
+               "---------\n" + 
+               format("Network", network, binaryIP.getNetwork()) + 
+               format("MinHost", minhost, binaryIP.getMinhost()) + 
+               format("MaxHost", maxhost, binaryIP.getMaxhost()) + 
+               format("Broadcast", broadcast, binaryIP.getBroadcast()) +
+               "Hosts/Net: \t\u001B[34m" + numhost + "\t\u001B[0m";
+    }
     
     //metodo constructor con address y mask como parametros
     public IP(String address, int mask){
@@ -35,6 +48,7 @@ public class IP {
         minhost = b2d(binaryIP.getMinhost());
         maxhost = b2d(binaryIP.getMaxhost());
         broadcast = b2d(binaryIP.getBroadcast());
+        numhost = calcNumHost();
     }
     
     private int calcNumHost(){
@@ -113,11 +127,11 @@ public class IP {
         this.broadcast = broadcast;
     }
 
-    public String getNumhost() {
+    public int getNumhost() {
         return numhost;
     }
 
-    public void setNumhost(String numhost) {
+    public void setNumhost(int numhost) {
         this.numhost = numhost;
     }
 
@@ -129,10 +143,9 @@ public class IP {
         this.binaryIP = binaryIP;
     }
     
-            
-    @Override
-    public String toString(){
-        return "Address:    " + address + "      " + binaryIP.getAddress();
+    private String format(String title, String address, String binary){
+        return title+": \t\u001B[34m" + address + " \t\t\u001B[33m" + binary + "\n\u001B[0m";
     }
+    
     
 }

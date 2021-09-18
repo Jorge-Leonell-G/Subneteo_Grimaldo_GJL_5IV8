@@ -18,13 +18,16 @@ public class Subneteo_GGJL {
      */
     public static void main(String[] args) {
         //Creacion de array String [] para el almacenamiento de los ejemplos de IP que se piden en la tarea
-        String [] s = {
-            "192.168.1.1/24", "124.0.0.0/16"
+        String[] s = {
+            "10.0.0.0/25", "10.0.0.0"
         };
         //instancia de la funcion principal de la calculadora
         IP[] ips = CalculadoraIP.calc(s);
-        for (IP ip: ips){
+        for (int i = 0; i < ips.length; i++){
+            IP ip = ips[i];
             System.out.println(ip);
+            if (ips.length != 1 && i != ips.length - 1)
+                System.out.println("\n-------Next IP------");
         }
         
     }
